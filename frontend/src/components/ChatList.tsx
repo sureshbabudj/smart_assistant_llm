@@ -54,7 +54,7 @@ export function ChatList({
   return (
     <aside
       className={cn(
-        "min-w-48 hidden lg:block bg-background-light border-r border-stroke",
+        "hidden w-1/4 overflow-hidden lg:block bg-background-light border-r border-stroke",
         className,
         isHidden && "lg:hidden!"
       )}
@@ -98,7 +98,7 @@ export function ChatList({
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-semibold text-foreground">
+                  <h3 className="font-semibold text-foreground text-ellipsis overflow-hidden text-nowrap pe-2">
                     {conv.title}
                   </h3>
                   <button

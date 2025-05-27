@@ -98,13 +98,13 @@ app.post("/api/chat-stream", async (req: Request, res: Response) => {
         res.write(`data: ${JSON.stringify(data)}\n\n`);
 
         // Optional: log to server console for debugging
-        if (chunk.type === "segment") {
-          process.stdout.write(` [segment start: ${chunk.segmentType}] `);
-        }
-        process.stdout.write(chunk.text);
-        if (chunk.type === "segment") {
-          process.stdout.write(` [segment end: ${chunk.segmentType}] `);
-        }
+        // if (chunk.type === "segment") {
+        //   process.stdout.write(` [segment start: ${chunk.segmentType}] `);
+        // }
+        // process.stdout.write(chunk.text);
+        // if (chunk.type === "segment") {
+        //   process.stdout.write(` [segment end: ${chunk.segmentType}] `);
+        // }
       },
     });
 

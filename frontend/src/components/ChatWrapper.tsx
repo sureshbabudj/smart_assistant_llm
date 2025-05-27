@@ -8,8 +8,10 @@ export function ChatWrapper() {
   return (
     <div className="flex h-full">
       <SlideOverMenu />
+
       <LeftSidebar />
       <ChatList />
+
       <ChatMessagesArea />
       <Sidebar />
     </div>

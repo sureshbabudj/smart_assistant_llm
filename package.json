@@ -1,5 +1,5 @@
 {
-  "name": "smart_coding_assistant",
+  "name": "smart_assistant",
   "version": "1.0.0",
   "scripts": {
     "dev": "nodemon"

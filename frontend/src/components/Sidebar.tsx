@@ -31,7 +31,7 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        "min-w-48 fixed top-0 right-0 z-50 shadow-[0_0_2px_1px_rgb(0 0 0 / 10%)] lg:shadow-none lg:z-0 lg:static bg-background-light border-l border-stroke p-4 h-screen transform transition-transform duration-300 ease-in-out"
+        "w-1/4 truncate fixed top-0 right-0 z-50 shadow-[0_0_2px_1px_rgb(0 0 0 / 10%)] lg:shadow-none lg:z-0 lg:static bg-background-light border-l border-stroke p-4 h-screen transform transition-transform duration-300 ease-in-out"
       )}
     >
       <div className="flex items-center justify-between mb-6">
@@ -53,16 +53,18 @@ export function Sidebar() {
               <div className="w-10 h-10 bg-primary bg-opacity-20 rounded-lg flex items-center justify-center text-foreground">
                 <PackageIcon className="w-6 h-6" />
               </div>
-              <div className="flex-1 min-w-0">
+              <div className="flex-1">
                 <a
                   href="https://huggingface.co/google/gemma-3-1b-it"
-                  className="font-medium truncate"
+                  className="font-medium truncate break-all w-full"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   google/gemma-3-1b-it
                 </a>
-                <p className="text-xs text-foreground">Google DeepMind</p>
+                <p className="text-xs text-foreground truncate">
+                  Google DeepMind
+                </p>
               </div>
             </div>
           </div>
@@ -75,7 +77,7 @@ export function Sidebar() {
                 <div className="w-10 h-10 bg-primary bg-opacity-20 rounded-lg flex items-center justify-center text-foreground">
                   <FlagIcon className="w-6 h-6" />
                 </div>
-                <div className="flex-1 min-w-0 flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1.5">
                   <p className="font-medium truncate">{conversation.title}</p>
                   <p className="text-xs text-foreground">
                     updated{" "}
