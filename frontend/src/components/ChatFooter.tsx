@@ -5,11 +5,11 @@ import {
 } from "lucide-react";
 import React from "react";
 import { useChatStore } from "../store";
-import { useChatEngine } from "../hook/useChatEngine";
+import { useInput } from "../hook/useInput";
 
 export function ChatFooter() {
-  const { loading } = useChatStore((state) => state);
-  const { handleInput, inputRef } = useChatEngine();
+  const { streaming: loading } = useChatStore((state) => state);
+  const { handleInput, inputRef } = useInput();
 
   const handleSubmit = () => {
     const value = inputRef.current?.value.trim();
@@ -32,6 +32,8 @@ export function ChatFooter() {
           <SquareChevronRightIcon className="w-6 h-6" />
         </div>
         <textarea
+          name="message"
+          id="message"
           ref={inputRef}
           onKeyDown={handleEnter}
           rows={3}
@@ -39,8 +41,8 @@ export function ChatFooter() {
           className="flex-1 bg-transparent focus:outline-none text-foreground placeholder-gray-400 resize-none"
         ></textarea>
         <button
-          className="p-2 mx-3 bg-highlight hover:bg-background-light text-background hover:text-foreground-light rounded-full"
           onClick={handleSubmit}
+          className="p-2 mx-3 bg-highlight hover:bg-background-light text-background hover:text-foreground-light rounded-full"
         >
           {!loading ? (
             <SendHorizontalIcon className="w-6 h-6" />

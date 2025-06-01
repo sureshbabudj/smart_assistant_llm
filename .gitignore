@@ -23,4 +23,6 @@ models
 *.njsproj
 *.sln
 *.sw?
+
+*.db
 .env

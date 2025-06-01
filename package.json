@@ -2,7 +2,9 @@
   "name": "smart_assistant",
   "version": "1.0.0",
   "scripts": {
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "migrate": "npx prisma migrate dev --name",
+    "generate": "npx prisma generate"
   },
   "nodemonConfig": {
     "watch": [
@@ -17,15 +19,20 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@prisma/client": "^6.8.2",
     "axios": "^1.9.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "node-llama-cpp": "^3.8.1"
+    "jsonwebtoken": "^9.0.2",
+    "node-llama-cpp": "^3.8.1",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.15.21",
     "nodemon": "^3.1.10",
     "tsx": "^4.19.4",

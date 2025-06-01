@@ -30,8 +30,8 @@ export function SlideOverMenu() {
         className="flex shadow-[3px_0_3px_0px_rgb(0 0 0 / 10%)] w-fit"
         onClick={(e) => e.stopPropagation()}
       >
-        <LeftSidebar className="flex! md:invisible!" />
-        <ChatList className="block!" />
+        <LeftSidebar className="flex! md:invisible! w-fit!" />
+        <ChatList className="block! w-fit!" />
       </div>
     </div>
   );

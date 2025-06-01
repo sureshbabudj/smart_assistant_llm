@@ -14,11 +14,13 @@ export function LeftSidebar({
   className,
   ...props
 }: React.HTMLAttributes<HTMLElement>) {
-  const { toggleChatList, toggleSidebar, conversations } = useChatStore(
-    (state) => state
-  );
+  const {
+    toggleChatList,
+    toggleSidebar,
+    conversations = [],
+  } = useChatStore((state) => state);
   const [isEditLayoutShown, setIsEditLayoutShown] = useState<boolean>(false);
-  const length = Object.keys(conversations).length;
+  const length = conversations.length;
   return (
     <aside
       className={cn(

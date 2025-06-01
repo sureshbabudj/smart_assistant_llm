@@ -1,7 +1,7 @@
 import { AlarmClockCheck, RotateCcwIcon, User2Icon } from "lucide-react";
 import { formatDate } from "date-fns";
 import { cn } from "../utils/classnames";
-import type { Message } from "../types";
+import type { Message } from "@prisma/client";
 import { useShowDown } from "../hook/useShowdown";
 import { Logo } from "./Logo";
 
@@ -23,7 +23,7 @@ export function ChatMessage({
       ) : (
         <Logo className="w-10 h-10 rounded-xl p-1 bg-background border-stroke" />
       )}
-      <div className="flex-1">
+      <div className="">
         <div className="flex items-center gap-2 mb-1">
           <span className="font-semibold">{isUser ? "You" : "Assistant"}</span>
           <AlarmClockCheck className="w-4 h-4 text-foreground" />

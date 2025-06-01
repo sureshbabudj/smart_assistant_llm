@@ -1,16 +1,23 @@
 import { useChatStore } from "../store";
+import { cn } from "../utils/classnames";
 import { ChatFooter } from "./ChatFooter";
 import { ChatHeader } from "./ChatHeader";
 import { ChatMessages } from "./ChatMessages";
 
-export function ChatMessagesArea() {
+export function ChatMessagesArea({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   const { conversations, currentConversation } = useChatStore((state) => state);
   const conversation = currentConversation
-    ? conversations[currentConversation] ?? null
+    ? conversations.find(({ id }) => id === currentConversation) ?? null
     : null;
 
   return (
-    <main className="flex-1 flex flex-col bg-background-light">
+    <main
+      className={cn("flex-1 flex flex-col bg-background-light", className)}
+      {...props}
+    >
       <ChatHeader />
       {/* Chat Messages */}
       {conversation ? (

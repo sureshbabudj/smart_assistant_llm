@@ -3,13 +3,7 @@ import { formatDistance } from "date-fns";
 import { cn } from "../utils/classnames";
 import React, { useEffect, useState } from "react";
 import { useChatStore } from "../store";
-import type { Conversation, ConversationsMap } from "../types";
-
-function sortConversationsMap(conversations: ConversationsMap): Conversation[] {
-  return Object.values(conversations).sort(
-    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-  );
-}
+import type { Conversation } from "@prisma/client";
 
 export function ChatList({
   className,
@@ -20,20 +14,17 @@ export function ChatList({
     conversations,
     currentConversation: activeConversationId,
     setCurrentConversation,
-    updateConversation,
+    fetchConversations,
   } = useChatStore((state) => state);
 
-  const sortedConversations = sortConversationsMap(conversations);
-
-  const [filterConversations, setFilterConversations] = useState<
-    Conversation[]
-  >([...sortedConversations]);
+  const [filterConversations, setFilterConversations] =
+    useState<Conversation[]>(conversations);
 
   const handleSearchQuery = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value;
 
     if (!value || value.length === 0) {
-      setFilterConversations(sortedConversations);
+      setFilterConversations([...conversations]);
       return;
     }
 
@@ -41,20 +32,46 @@ export function ChatList({
       return;
     }
 
-    const filtered = sortedConversations.filter((conv: Conversation) =>
+    const filtered = conversations.filter((conv: Conversation) =>
       conv.title.toLowerCase().includes(value.toLowerCase())
     );
     setFilterConversations(filtered);
   };
 
+  const handleFlagConversation = async (
+    e: React.MouseEvent,
+    conv: Conversation
+  ) => {
+    e.stopPropagation();
+    // Here you would typically toggle the flag state in your backend
+    try {
+      const response = await fetch(`/api/conversations/${conv.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+        body: JSON.stringify({ isFlagged: !conv.isFlagged }),
+      });
+      if (!response.ok) {
+        throw "Failed to update conversation flag status";
+      }
+      await fetchConversations();
+    } catch (error) {
+      console.error("Failed to toggle flag status:", error);
+      return;
+    }
+  };
+
   useEffect(() => {
-    setFilterConversations(sortConversationsMap(conversations));
+    // Reset filter when conversations change
+    setFilterConversations([...conversations]);
   }, [conversations]);
 
   return (
     <aside
       className={cn(
-        "hidden w-1/4 overflow-hidden lg:block bg-background-light border-r border-stroke",
+        "hidden max-w-72 overflow-hidden lg:block bg-background-light border-r border-stroke",
         className,
         isHidden && "lg:hidden!"
       )}
@@ -84,6 +101,11 @@ export function ChatList({
       </div>
       <div className="overflow-y-auto h-[calc(100vh-5rem)]">
         <div className="px-2 space-y-1">
+          {filterConversations.length === 0 && (
+            <div className="p-4 text-center text-gray-500">
+              No conversations found
+            </div>
+          )}
           {filterConversations.map((conv, idx) => (
             <div
               key={conv.id}
@@ -106,13 +128,7 @@ export function ChatList({
                       "cursor-pointer hover:text-active-foreground",
                       conv.isFlagged ? "text-red-500" : "text-foreground"
                     )}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      updateConversation(conv.id, {
-                        ...conv,
-                        isFlagged: !conv.isFlagged,
-                      });
-                    }}
+                    onClick={(e) => handleFlagConversation(e, conv)}
                   >
                     <FlagIcon className="w-4 h-4" />
                   </button>
@@ -121,7 +137,7 @@ export function ChatList({
                   className="text-sm text-foreground truncate"
                   suppressHydrationWarning
                 >
-                  {formatDistance(new Date(conv.createdAt), Date.now(), {
+                  {formatDistance(conv.createdAt!, Date.now(), {
                     addSuffix: true,
                   })}
                 </p>

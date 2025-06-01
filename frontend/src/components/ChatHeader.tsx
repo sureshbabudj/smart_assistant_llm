@@ -8,7 +8,8 @@ import {
 import { formatDistance } from "date-fns";
 import { cn } from "../utils/classnames";
 import { useChatStore } from "../store";
-import type { Conversation, DropdownItem } from "../types";
+import type { Conversation } from "@prisma/client";
+import type { DropdownItem } from "../types";
 import { DropdownMenu } from "./DropdownMenu";
 import { useState } from "react";
 import { Modal, ModalContent, ModalFooter, ModalHeader } from "./Modal";
@@ -43,12 +44,56 @@ export function ChatHeader() {
     toggleSidebar,
     toggleSlideOverMenu,
     setCurrentConversation,
-    removeConversation,
-    updateConversation,
+    fetchConversations,
   } = useChatStore((state) => state);
   const conversation = currentConversation
-    ? conversations[currentConversation] ?? null
+    ? conversations.find((i) => i.id === currentConversation) ?? null
     : null;
+
+  const removeConversation = async (convId: string) => {
+    try {
+      const response = await fetch(`/api/conversations/${convId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to remove conversation");
+      }
+      await fetchConversations();
+      setCurrentConversation(null);
+      console.log("Conversation removed successfully.");
+    } catch (error) {
+      console.error("Error removing conversation:", error);
+    }
+  };
+  const updateConversation = async (
+    convId: string,
+    conversation: Partial<Conversation>
+  ) => {
+    try {
+      const response = await fetch(`/api/conversations/${convId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+        body: JSON.stringify({
+          title: conversation.title,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update conversation");
+      }
+      await fetchConversations();
+
+      console.log("Conversation updated successfully.");
+    } catch (error) {
+      console.error("Error updating conversation:", error);
+    }
+  };
 
   const showMoreOptionsItems: DropdownItem[] = [
     {
@@ -170,7 +215,7 @@ export function ChatHeader() {
               )}
             </h1>
             <span className="text-sm text-foreground" suppressHydrationWarning>
-              {formatDistance(new Date(conversation.createdAt), Date.now(), {
+              {formatDistance(conversation.createdAt!, Date.now(), {
                 addSuffix: true,
               })}
             </span>
