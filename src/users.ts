@@ -41,12 +41,6 @@ userRouter.post("/login", async (req, res): Promise<any> => {
   }
 });
 
-userRouter.post("/logout", authMiddleware, (req, res): any => {
-  // Invalidate the JWT token on the client side
-
-  res.status(200).json({ message: "Logged out successfully." });
-});
-
 // CRUD for user
 userRouter.get("/", authMiddleware, async (req, res): Promise<any> => {
   const users = await prisma.user.findMany();
@@ -68,7 +62,13 @@ userRouter.put("/:id", authMiddleware, async (req, res): Promise<any> => {
   });
   res.json(user);
 });
+
 userRouter.delete("/:id", authMiddleware, async (req, res): Promise<any> => {
   await prisma.user.delete({ where: { id: req.params.id } });
   res.json({ message: "User deleted." });
+});
+
+userRouter.post("/logout", authMiddleware, (req, res): any => {
+  // Invalidate the JWT token on the client side
+  res.status(200).json({ message: "Logged out successfully." });
 });

@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import { useChatStore } from "../store";
 import { Logo } from "./Logo";
 import { EditLayout } from "./EditLayout";
+import { Profile } from "./Profile";
 
 export function LeftSidebar({
   className,
@@ -20,6 +21,7 @@ export function LeftSidebar({
     conversations = [],
   } = useChatStore((state) => state);
   const [isEditLayoutShown, setIsEditLayoutShown] = useState<boolean>(false);
+  const [isProfileShown, setIsProfileShown] = useState<boolean>(false);
   const length = conversations.length;
   return (
     <aside
@@ -59,12 +61,16 @@ export function LeftSidebar({
           />
         </button>
         <button className="w-12 h-12 rounded-xl overflow-hidden border border-stroke text-foreground">
-          <User2Icon className="p-2 w-full h-full object-cover" />
+          <User2Icon
+            className="p-2 w-full h-full object-cover"
+            onClick={() => setIsProfileShown(!isProfileShown)}
+          />
         </button>
       </div>
       {isEditLayoutShown && (
         <EditLayout hide={() => setIsEditLayoutShown(false)} />
       )}
+      {isProfileShown && <Profile hide={() => setIsProfileShown(false)} />}
     </aside>
   );
 }
